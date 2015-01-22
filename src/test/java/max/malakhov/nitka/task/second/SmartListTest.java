@@ -5,23 +5,33 @@ import org.testng.annotations.Test;
 public class SmartListTest {
 
     @Test
-    public void testRemoveSerialDubs() throws Exception {
-        SmartList list = generateList();
+    public void testPurgeSerial() throws Exception {
+        SmartList<Long> list = generateList();
+
+        System.out.println("List content before: ");
         print(list);
-        list.removeDubs(true);
+
+        list.purge(true);
+
+        System.out.println("List content after: ");
         print(list);
     }
 
     @Test
-    public void testRemoveDubs() throws Exception {
-        SmartList list = generateList();
+    public void testPurge() throws Exception {
+        SmartList<Long> list = generateList();
+
+        System.out.println("List content before: ");
         print(list);
-        list.removeDubs();
+
+        list.purge();
+
+        System.out.println("List content after: ");
         print(list);
     }
 
-    private SmartList generateList() {
-        SmartList list = new SmartList();
+    private SmartList<Long> generateList() {
+        SmartList<Long> list = new SmartList<Long>();
 
         list.add(1L);
         list.add(13L);
@@ -50,8 +60,7 @@ public class SmartListTest {
         return list;
     }
 
-    private void print(SmartList list) {
-        System.out.println("List content: ");
+    private void print(SmartList<Long> list) {
         for(Long value: list) {
             System.out.print(" " + value);
         }

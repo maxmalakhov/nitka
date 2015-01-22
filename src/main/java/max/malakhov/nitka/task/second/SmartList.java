@@ -5,50 +5,70 @@ import java.util.*;
 /**
  * Created by max on 1/20/15.
  */
-public class SmartList extends ArrayList<Long> {
+public class SmartList<T> extends ArrayList<T> {
 
     public static final int LIMIT = 3;
 
-    public void removeDubs() {
-        removeDubs(false);
+    public void purge() {
+        purge(false);
     }
 
-    public void removeDubs(boolean serial) {
-        Map<Long, ValueInfo> info = new HashMap<Long, ValueInfo>();
+    public void purge(boolean serial) {
+        List<List<T>> list = new ArrayList<List<T>>();
 
-        Long previous = Long.MAX_VALUE;
-        for (Iterator<Long> iterator = this.iterator(); iterator.hasNext();) {
-            Long value = iterator.next();
-
-            updateInfo(info, value, previous);
-
-            if(checkValue(info, value, serial)) {
-                iterator.remove();
-            }
-            previous = value;
-        }
-    }
-
-    private void updateInfo(Map<Long, ValueInfo> info, Long value, Long previous) {
-        if (!info.containsKey(value)) {
-            // add new value
-            info.put(value, new ValueInfo(value));
-        } else {
-            // update count and sequence
-            info.get(value).increment(previous);
-        }
-    }
-
-    private boolean checkValue(Map<Long, ValueInfo> info, Long value, boolean serial) {
         if (serial) {
-            if (info.containsKey(value) && info.get(value).getSequence() >= LIMIT ) {
-                return true;
-            }
+            list.addAll(analyzeSerial());
         } else {
-            if (info.containsKey(value) && info.get(value).getCount() >= LIMIT ) {
-                return true;
+            list.addAll(analyze());
+        }
+
+        cleanup(list);
+    }
+
+    private Collection<List<T>> analyzeSerial() {
+        List<List<T>> list = new ArrayList<List<T>>();
+
+        T previousValue = null;
+        List<T> previousSequence = null;
+        for (T value : this) {
+            if (!value.equals(previousValue)) {
+                // add new sequence
+                List<T> sequence = new ArrayList<T>(1);
+                list.add(sequence);
+                previousSequence = sequence;
+            } else {
+                // update sequence
+                if(previousSequence != null) {
+                    previousSequence.add(previousValue);
+                }
+            }
+            previousValue = value;
+        }
+        return list;
+    }
+
+    private Collection<List<T>> analyze() {
+        Map<T, List<T>> map = new HashMap<T, List<T>>();
+
+        for (T value : this) {
+            if (!map.containsKey(value)) {
+                // add new sequence
+                map.put(value, new ArrayList<T>());
+            } else {
+                // update sequence
+                map.get(value).add(value);
             }
         }
-        return false;
+
+        return map.values();
+    }
+
+    private void cleanup(Collection<List<T>> sequences) {
+        for(List<T> sequence : sequences) {
+            if (sequence.size() >= LIMIT) {
+                this.removeAll(sequence);
+            }
+        }
     }
 }
+
