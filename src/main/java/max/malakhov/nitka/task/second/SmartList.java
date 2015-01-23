@@ -36,12 +36,12 @@ public class SmartList<T> extends ArrayList<T> {
                 List<T> sequence = new ArrayList<T>(1);
                 list.add(sequence);
                 previousSequence = sequence;
-            } else {
-                // update sequence
-                if(previousSequence != null) {
-                    previousSequence.add(previousValue);
-                }
             }
+            // update sequence
+            if(previousSequence != null) {
+                previousSequence.add(previousValue);
+            }
+
             previousValue = value;
         }
         return list;
@@ -54,10 +54,10 @@ public class SmartList<T> extends ArrayList<T> {
             if (!map.containsKey(value)) {
                 // add new sequence
                 map.put(value, new ArrayList<T>());
-            } else {
-                // update sequence
-                map.get(value).add(value);
             }
+            // update sequence
+            map.get(value).add(value);
+
         }
 
         return map.values();

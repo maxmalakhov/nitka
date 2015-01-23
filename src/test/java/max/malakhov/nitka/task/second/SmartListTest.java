@@ -30,6 +30,32 @@ public class SmartListTest {
         print(list);
     }
 
+    @Test
+    public void testPurgeSerial_Short() throws Exception {
+        SmartList<Long> list = generateShortList();
+
+        System.out.println("List content before: ");
+        print(list);
+
+        list.purge(true);
+
+        System.out.println("List content after: ");
+        print(list);
+    }
+
+    @Test
+    public void testPurge_Short() throws Exception {
+        SmartList<Long> list = generateShortList();
+
+        System.out.println("List content before: ");
+        print(list);
+
+        list.purge();
+
+        System.out.println("List content after: ");
+        print(list);
+    }
+
     private SmartList<Long> generateList() {
         SmartList<Long> list = new SmartList<Long>();
 
@@ -55,6 +81,16 @@ public class SmartListTest {
         list.add(1L);
         list.add(2L);
         list.add(2L);
+        list.add(1L);
+
+        return list;
+    }
+
+    private SmartList<Long> generateShortList() {
+        SmartList<Long> list = new SmartList<Long>();
+
+        list.add(1L);
+        list.add(1L);
         list.add(1L);
 
         return list;
